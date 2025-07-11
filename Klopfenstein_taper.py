@@ -80,7 +80,7 @@ def klopf_S(Z1, Z2, Gmax, L, f, ereff=1-0j):
     '''
     c0  = 299792458   # speed of light in vacuum (m/s)
     g   = 2*np.pi*f*np.sqrt(-complex(ereff))/c0  # propagation constant
-    g   = g*np.sign(g)        # correct for the sign convention of ereff = real - 1j*imag 
+    g = np.real(g)-1j*np.imag(g)        # correct for the sign convention of ereff = real - 1j*imag 
     G0  = (Z2 -Z1)/(Z2 + Z1)  # impedance mismatch 
     A   = np.arccosh(abs(G0/Gmax))
     S11 = np.exp(-g*L)*G0*np.cosh(np.sqrt((g*L)**2 + A**2))/np.cosh(A) # modified for lossy response
@@ -159,7 +159,7 @@ def taperS(Z, L, f, ereff=1-0j):
     dT = lambda x,Zn,Zm: Qnm(Zn, Zm)@np.diag([np.exp(-x), np.exp(x)])  # T-parameters of one segment
     c0 = 299792458   # speed of light in vacuum (m/s)
     g  = 2*np.pi*f*np.sqrt(-complex(ereff))/c0  # propagation constant
-    g  = g*np.sign(g)   # correct for the sign convention of ereff = real - 1j*imag 
+    g = np.real(g)-1j*np.imag(g)   # correct for the sign convention of ereff = real - 1j*imag 
     dl = L/(len(Z)-1)   # length of a single segment    
     return np.array([T2S( functools.reduce(np.dot, [dT(p*dl,z1,z2) for z1,z2 in zip(Z[:-1],Z[1:])]) ) for p in g])
     
